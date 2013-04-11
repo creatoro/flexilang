@@ -42,25 +42,27 @@ class Request extends Kohana_Request
 			$uri = Request::detect_uri();
 		}
 
+		$uri = trim($uri, '/');
+
 		// Get current language from URI
 		$current_language = Lang::find_current($uri);
 
-		if ( ! Lang::$default_prepended AND $current_language === Lang::$default AND strpos($uri, '/' . Lang::$default) === 0)
+		if ( ! Lang::$default_prepended AND $current_language === Lang::$default AND strpos($uri, Lang::$default) === 0)
 		{
 			// If default is not prepended and current language is the default,
 			// then redirect to the same URI, but with default language removed
-			Request::lang_redirect(NULL, ltrim($uri, '/'.Lang::$default));
+			Request::lang_redirect(NULL, ltrim($uri, '/' . Lang::$default));
 		}
-		else if (Lang::$default_prepended AND $current_language === Lang::$default AND strpos($uri, '/' . Lang::$default) !== 0)
+		else if (Lang::$default_prepended AND $current_language === Lang::$default AND strpos($uri, Lang::$default) !== 0)
 		{
 			// If the current language is the default which needs to be
 			// prepended, but it's missing, then redirect to same URI but with
 			// language prepended
-			Request::lang_redirect($current_language, $uri);
+			Request::lang_redirect($current_language, '/' . $uri);
 		}
-		else if (!(strpos($uri, '/' . $current_language) === 0))
+		else if (!(strpos($uri, $current_language) === 0))
 		{
-			Request::lang_redirect($current_language, $uri);
+			Request::lang_redirect($current_language, '/' . $uri);
 		}
 
 		// Language found in the URI
