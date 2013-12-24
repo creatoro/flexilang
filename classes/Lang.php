@@ -141,7 +141,7 @@ class Lang
 		}
 
 		// Return the hard-coded default language as final fallback
-		return Lang::$config->default;
+		return Lang::config()->default;
 	}
 
 	/**
