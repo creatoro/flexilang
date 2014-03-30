@@ -42,6 +42,11 @@ class Request extends Kohana_Request
 			$uri = Request::detect_uri();
 		}
 
+		if (strpos($uri, 'https://') === 0 OR strpos($uri, 'http://') === 0 OR strpos($uri, 'ftp://') === 0)
+		{
+			return parent::factory($uri, $client_params, $allow_external, $injected_routes);
+		}
+
 		$uri = trim($uri, '/');
 
 		// Get current language from URI
