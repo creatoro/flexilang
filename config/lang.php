@@ -9,15 +9,19 @@
  *  translations - Translated route parameters for i18n routes, only needed for non-default languages
  */
 return array(
-
-    'en' => array(
-        'i18n_code'    => 'en-us',
-        'locale'       => array('en_US.utf-8'),
-    ),
-	'de' => array(
-		'i18n_code'    => 'de-de',
-		'locale'       => array('de_DE.utf-8'),
-        'translations' => array(),
+	'default' => 'en',
+	'cookie' => 'l',
+	'languages' => array(
+		/*
+		'en' => array(
+			'i18n_code'    => 'en-us',
+			'locale'       => array('en_US.utf-8'),
+		),
+		'de' => array(
+			'i18n_code'    => 'de-de',
+			'locale'       => array('de_DE.utf-8'),
+			'translations' => array(),
+		),
+		*/
 	),
-
 );
