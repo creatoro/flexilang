@@ -45,13 +45,20 @@ class Request extends Kohana_Request {
         // Get current language from URI
         $current_language = Lang::find_current($uri);
 
-        if ( ! Lang::$default_prepended AND $current_language === Lang::$default AND strpos($uri, '/'.Lang::$default) === 0)
+        // No language marker
+        $no_language = array_search($uri, Arr::get($config, 'no_language_uri', array())) !== FALSE;
+
+        // Default language present marker
+        // We have to check for both variants as URI can be returned different based on server config
+        $default_language_present = ((strpos($uri, '/'.Lang::$default) === 0) OR (strpos($uri, Lang::$default.'/') === 0));
+
+        if ( ! Lang::$default_prepended AND $current_language === Lang::$default AND $default_language_present)
         {
             // If default is not prepended and current language is the default,
             // then redirect to the same URI, but with default language removed
             Request::lang_redirect(NULL, ltrim($uri, '/'.Lang::$default));
         }
-        elseif (Lang::$default_prepended AND $current_language === Lang::$default AND strpos($uri, '/'.Lang::$default) !== 0)
+        elseif (Lang::$default_prepended AND $current_language === Lang::$default AND ! $default_language_present AND $no_language === FALSE)
         {
             // If the current language is the default which needs to be
             // prepended, but it's missing, then redirect to same URI but with
@@ -74,7 +81,7 @@ class Request extends Kohana_Request {
             Cookie::set(Lang::$cookie, Request::$lang);
         }
 
-        if (Lang::$default_prepended OR Request::$lang !== Lang::$default)
+        if ((Lang::$default_prepended OR Request::$lang !== Lang::$default) AND $no_language === FALSE)
         {
             // Remove language from URI if default is prepended or the language is not the default
             $uri = (string) substr($uri, strlen(Request::$lang) + 1);
@@ -96,6 +103,12 @@ class Request extends Kohana_Request {
     {
         // Use the default server protocol
         $protocol = (isset($_SERVER['SERVER_PROTOCOL'])) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
+
+        // Make sure to set a default URI format (different server config retrieves different URI)
+        $uri = ltrim($uri, '/');
+
+        // Add trailing slash
+        $uri = '/'.$uri;
 
         // Set headers
         header($protocol.' 302 Found');

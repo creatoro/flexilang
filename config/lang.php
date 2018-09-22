@@ -19,5 +19,8 @@ return array(
 		'locale'       => array('de_DE.utf-8'),
         'translations' => array(),
 	),
+    'no_language_uri' => array(
+        'sitemap.xml',
+    ),
 
 );

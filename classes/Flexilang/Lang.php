@@ -63,6 +63,9 @@ class Flexilang_Lang {
         {
             // Set available languages
             Lang::$available_languages = array_keys(Lang::config());
+
+            // Remove no language URI from available languages
+            unset(Lang::$available_languages['no_language_uri']);
         }
 
         return Lang::$available_languages;
